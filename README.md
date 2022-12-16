@@ -46,7 +46,7 @@ That's why sometimes the Hexagonal architecture is represented using this diagra
 
 ![Hex Architecture Diagram 2](.github/assets/img/hex_architecture_2.png)
 
-The diagram is often simplified in this way, which is also helps to integrate the concepts of DDD:
+The previous diagram is often simplified in this way, which also helps to integrate the concepts of DDD:
 
 ![Hex Architecture Diagram 3](.github/assets/img/hex_architecture_3.png)
 
