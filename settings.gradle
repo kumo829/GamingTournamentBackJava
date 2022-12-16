@@ -1,0 +1,5 @@
+rootProject.name = 'gaming-tournament-back-java'
+
+include ':shared'
+project(':shared').projectDir = new File('src/shared')
+

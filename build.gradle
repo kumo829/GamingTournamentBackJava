@@ -1,0 +1,72 @@
+// Common for all projects
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+
+    group 'com.javatutoriales.gaming'
+    version '1.0-SNAPSHOT'
+
+    ext {
+        imageTag = project.properties['imageTag'] ?: 'latest'
+        imageName = "gaming-platform/${project.name}"
+        imageNameAndTag = "${imageName}:${imageTag}"
+        testcontainersVersion = "1.17.6"
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    }
+
+    test {
+//        systemProperty 'spring.profiles.active', 'local'
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.enabled true
+            html.enabled true
+        }
+    }
+
+    task view_paths {
+        doLast { task ->
+            println "$task.project.name"
+            println "------------------"
+            println "Main: $sourceSets.main.java.srcDirTrees"
+            println "   Resources: $sourceSets.main.resources.srcDirTrees"
+            println "Tests: $sourceSets.test.java.srcDirTrees"
+            println "   Resources: $sourceSets.test.resources.srcDirTrees"
+        }
+    }
+}
+
+// All subprojects (located in src/*)
+subprojects {
+
+    dependencies {
+        if (project.name != "shared") {
+            implementation project(":shared")
+            testImplementation project(":shared").sourceSets.test.output
+        }
+    }
+}
+
+dependencies {
+    testImplementation project(":shared")
+}
