@@ -17,20 +17,38 @@ Here, the business rules are testable by design and independent of frameworks, d
 
 That means that the domain code must not have any outward-facing dependencies. Instead, with the help of the DIP, all dependencies point toward the domain code.
 
-The layers in this architecture are wrapped around each other in concentric circles. The main rule in such an architecture is the dependency rule, which states that all dependencies between those layers must point inward.
+The layers in this architecture are wrapped around each other in concentric circles. The main rule in such an architecture is the dependency rule, which states that all dependencies between those layers must point inward. Basically, the name of something declared in an outer circle must NOT be mentioned by the code in an inner circle. That includes, functions, classes. variables, or any other named software entity.
+
+**We don’t want anything in an outer circle to impact the inner circles**.
 
 The core of the architecture contains the **domain entities**, which are accessed by the surrounding **use cases**. The use cases are what we have called services earlier but are more fine-grained to have a single responsibility (that is, a single reason to change), thus avoiding the problem of broad services.
 
 Around this core, we can find all the other components of our application that support the business rules. This support can mean providing persistence or providing a UI, for example. Also, the outer layers may provide adapters to any other third-party component.
 
-Since the domain code knows nothing about which persistence or UI framework is used, it cannot contain any code specific to those frameworks and will concentrate on the business rules. We have all the freedom we could wish for to model the domain code. We could, for example, apply Domain-Driven Design (DDD) in its purest form. Not having to think about persistence or UI-specific problems makes that so much easier.
+Since the entities (the **domain**) code knows nothing about which persistence or UI framework is used, it cannot contain any code specific to those frameworks and will concentrate on the business rules. This Layer is responsible for the business logic of the application.
+It's the most stable layer, and it's basically the heart of the application. We have all the freedom we could wish for to model the domain code. 
+
+Here is where we can apply some Domain-Driven Design tactics, such as Aggregates, Value Objects, Entities, Domain Services, etc. Not having to think about persistence or UI-specific problems makes that so much easier.
 
 As we might expect, clean architecture comes at a cost. Since the domain layer is completely decoupled from the outer layers, such as persistence and UI, we have to maintain a model of our application's entities in each of the layers.
 
+It's important to mention that the Clean Architecture is NOT just a folder structure that you can copy and paste to your project.
+It's the idea of separating the application into layers, and conforming to The Dependency Rule, creating a system that is:
 
-## Hexagonal Architecture
+- Independent of Frameworks
+- Testable
+- Independent of UI
+- Independent of Database
+- Independent of any external agency
 
-For the Hexagonal architecture, there are different ways to represent it (and implement it). The preceding figure shows what a hexagonal architecture might look like.
+
+## Hexagonal Architecture (Ports and Adapters Architecture)
+
+The Hexagonal Architecture (also known as Ports and Adapters Architecture) is a software architecture that is based on the idea of isolation of the core business logic from outside concerns by separating the application into loosely coupled components.
+
+It's important to note that Hexagonal Architecture came before Clean Architecture, however, both share the same objective, which is the separation of concerns.
+
+There are different ways to represent it and implement it (as it seems that everyone on the Internet is interpreting it in different ways). The preceding figure shows what a hexagonal architecture might look like.
 
 ![Hex Architecture Diagram 1](.github/assets/img/hex_architecture_1.png)
 
@@ -59,8 +77,13 @@ In the **Domain** hexagon, we assemble the elements responsible for describing t
 The **Domain** hexagon represents an effort to understand and model a real-world problem.
 
 We also need ways to use, process, and orchestrate the business rules coming from the Domain hexagon. That's what the **Application** hexagon does. It sits between the business and technology sides, serving as a middleman to interact with both parties. The Application hexagon utilizes **ports** and **use cases** to perform its functions.
+
 ![Application Hexagon](.github/assets/img/application.png)
 
 The **Infrastructure** (sometimes also called **Framework**) hexagon provides the outside world interface. That's the place where we have the opportunity to determine how to expose application features – this is where we define REST or gRPC endpoints, for example. And to consume things from external sources, we use the Infrastructure hexagon to specify the mechanisms to fetch data from databases, message brokers, or any other system. In the hexagonal architecture, we materialize technology decisions through **adapters**.
 
 ![Infrastructure Hexagon](.github/assets/img/infrastructure.png)
+
+
+## References
+- https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
