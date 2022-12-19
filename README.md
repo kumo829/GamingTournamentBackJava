@@ -85,5 +85,12 @@ The **Infrastructure** (sometimes also called **Framework**) hexagon provides th
 ![Infrastructure Hexagon](.github/assets/img/infrastructure.png)
 
 
+## Implementation
+Each module (microservice) will be implemented using the following package structure, which combines the concepts of hexagonal architecture and Domain-Driven Design. I'm trying to not make it complex, but flexible to modify it when necessary:
+
+![Hexagonal architecture package_structure](.github/assets/img/hexagonal_architecture_package_structure.png)
+
+The main packages -`domain`, `application`, and `infrastructure`(framework)- resemble the hexagonal architecture's layers. The subpackages, I think that the names are self-explanatory. 
+
 ## References
 - https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
