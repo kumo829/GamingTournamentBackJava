@@ -4,12 +4,15 @@ import com.javatutoriales.gaming.auth.domain.entities.Member;
 import com.javatutoriales.gaming.auth.domain.valueobjects.Credentials;
 import com.javatutoriales.gaming.auth.domain.valueobjects.Profile;
 import jakarta.validation.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Set;
 
 @Builder
-public record RegisterAccountCommand(@Valid Member member, @Valid Credentials credentials, @Valid Profile profile) {
+public record RegisterAccountCommand(@Valid @NotNull Member member,
+                                     @Valid @NotNull Credentials credentials,
+                                     @Valid @NotNull Profile profile) {
     public static class RegisterAccountCommandBuilder {
         public RegisterAccountCommand build() {
 

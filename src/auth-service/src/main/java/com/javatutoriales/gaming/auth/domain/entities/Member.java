@@ -2,6 +2,7 @@ package com.javatutoriales.gaming.auth.domain.entities;
 
 import com.javatutoriales.gaming.auth.domain.valueobjects.MemberId;
 import com.javatutoriales.shared.domain.entity.BaseEntity;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -16,5 +17,6 @@ public class Member extends BaseEntity<MemberId> {
     @NotEmpty
     private final String lastName;
     @NotEmpty
+    @Email
     private final String email;
 }
