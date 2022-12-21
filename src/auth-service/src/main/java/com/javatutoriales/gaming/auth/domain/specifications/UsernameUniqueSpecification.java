@@ -15,7 +15,7 @@ public class UsernameUniqueSpecification extends AbstractSpecification<Member> {
 
     @Override
     public boolean isSatisfiedBy(Member member) {
-        return existingMembers.anyMatch(m -> m.getCredentials().getUsername().equalsIgnoreCase(member.getCredentials().getUsername()));
+        return existingMembers.anyMatch(m -> m.getEmail().equalsIgnoreCase(member.getEmail()));
     }
 
     @Override
