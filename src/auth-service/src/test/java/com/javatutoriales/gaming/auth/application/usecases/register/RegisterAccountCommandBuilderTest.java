@@ -18,7 +18,7 @@ class RegisterAccountCommandBuilderTest {
         assertThatThrownBy(() -> {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -32,7 +32,7 @@ class RegisterAccountCommandBuilderTest {
         assertThatThrownBy(() -> {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -61,7 +61,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("email").build())
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -76,7 +76,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").password("pass").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -91,7 +91,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -107,7 +107,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -121,7 +121,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
                     .credentials(Credentials.builder().password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -136,7 +136,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
@@ -151,7 +151,7 @@ class RegisterAccountCommandBuilderTest {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
                     .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .profile(Profile.participant())
+                    .profile(Profile.PARTICIPANT)
                     .build();
         }).doesNotThrowAnyException();
     }
