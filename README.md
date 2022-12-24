@@ -92,5 +92,16 @@ Each module (microservice) will be implemented using the following package struc
 
 The main packages -`domain`, `application`, and `infrastructure`(framework)- resemble the hexagonal architecture's layers. The subpackages, I think that the names are self-explanatory. 
 
+# Tech Stack
+Even though I'll try to use different techniques and styles on each "microservice", all of them will share some basic libraries.
+
+| Tool / Framework                                                                                                                        | Version | Use                                                                      | References |
+|-----------------------------------------------------------------------------------------------------------------------------------------|-------|--------------------------------------------------------------------------|------------|
+| <img align="left" alt="Java" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" />      Java    | 18    | Main programming language                                                |            |
+| <img align="left" alt="Lombok" width="40" src="https://avatars.githubusercontent.com/u/45949248?s=200&v=4" />      Project Lombok       | 1.18.24      | Annotation-based Java library that allows you to reduce boilerplate code |            |
+| <img align="left" alt="Bean Validation" width="40" src="https://beanvalidation.org/logo/logo.svg" /> Java Bean Validations              | 3.0.2      | Library to express constraints on object models via annotations          |            |
+| <img align="left" alt="Spring" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-plain.svg" /> Gradle    | 7.5   | Build automation tool                                                    |  https://docs.gradle.org/current/userguide/structuring_software_products.html |
+| <img align="left" alt="Spring" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" /> Docker | 20.10 | To run the microservices as containers                                   |
+
 ## References
 - https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
