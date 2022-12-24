@@ -1,8 +1,9 @@
 package com.javatutoriales.gaming.users.register;
 
-import com.javatutoriales.gaming.auth.domain.entities.Member;
-import com.javatutoriales.gaming.auth.domain.valueobjects.Credentials;
-import com.javatutoriales.gaming.auth.domain.valueobjects.Profile;
+import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountCommand;
+import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
+import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
