@@ -1,0 +1,20 @@
+
+ext {
+    cucumberVersion = "7.10.1"
+}
+
+
+dependencies {
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-picocontainer:${cucumberVersion}"
+
+
+    testImplementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
+    testImplementation 'org.glassfish:jakarta.el:5.0.0-M1'
+}
