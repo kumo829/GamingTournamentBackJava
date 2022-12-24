@@ -6,22 +6,22 @@ import com.javatutoriales.shared.domain.specification.AbstractSpecification;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UsernameUniqueSpecification extends AbstractSpecification<Member> {
 
     @NonNull
-    private final Stream<Member> existingMembers;
+    private final Optional<Member> existingMember;
 
     @Override
-    public boolean isSatisfiedBy(Member member) {
-        return existingMembers.anyMatch(m -> m.getEmail().equalsIgnoreCase(member.getEmail()));
+    public boolean isSatisfiedBy(@NonNull Member member) {
+        return existingMember.filter(m -> m.getEmail().equalsIgnoreCase(member.getEmail())).isPresent();
     }
 
     @Override
-    public void check(Member member) throws SpecificationException {
-        if (!isSatisfiedBy(member))
-            throw new SpecificationException("Username already exists", "GES-001");
+    public void check(@NonNull Member member) throws SpecificationException {
+        if (isSatisfiedBy(member))
+            throw new SpecificationException("Username '%s' already exists".formatted(member.getEmail()), "GES-001");
     }
 }

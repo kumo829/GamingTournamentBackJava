@@ -9,7 +9,7 @@ import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpeci
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -20,12 +20,12 @@ public class RegisterAccountService implements RegisterAccountUseCase {
     @Override
     public AccountId registerAccount(RegisterAccountCommand registerAccountCommand) {
 
-        Stream<Member> membersStream = membersRegistryOutputPort.getAll();
+        Optional<Member> maybeMember = membersRegistryOutputPort.findByUsername(registerAccountCommand.member().getEmail());
 
-        UsernameUniqueSpecification usernameUniqueSpecification = new UsernameUniqueSpecification(membersStream);
+        UsernameUniqueSpecification usernameUniqueSpecification = new UsernameUniqueSpecification(maybeMember);
 
-        if(!usernameUniqueSpecification.isSatisfiedBy(registerAccountCommand.member())){
-            throw new UsernameDuplicatedException("There is already an account with that username", "UDE-001");
+        if (!usernameUniqueSpecification.isSatisfiedBy(registerAccountCommand.member())) {
+            throw new UsernameDuplicatedException("There is already an account with the username '%s".formatted(registerAccountCommand.member().getEmail()), "UDE-001");
         }
 
         return null;
