@@ -5,3 +5,7 @@ project(':shared').projectDir = new File('src/shared')
 
 include ':auth-service'
 project(':auth-service')?.projectDir = new File('src/auth-service')
+
+include ':user-management'
+project(':user-management')?.projectDir = new File('src/user-management')
+
