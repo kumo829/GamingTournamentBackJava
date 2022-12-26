@@ -103,5 +103,10 @@ Even though I'll try to use different techniques and styles on each "microservic
 | <img align="left" alt="Spring" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-plain.svg" /> Gradle    | 7.5   | Build automation tool                                                    |  https://docs.gradle.org/current/userguide/structuring_software_products.html |
 | <img align="left" alt="Spring" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" /> Docker | 20.10 | To run the microservices as containers                                   |
 
+
+## Modules
+
+- [User Management](./src/user-management/) 
+
 ## References
 - https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
