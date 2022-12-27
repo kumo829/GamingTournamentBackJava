@@ -3,11 +3,10 @@ package com.javatutoriales.gaming.users.application.usecases.register;
 import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
+import com.javatutoriales.shared.validations.Validator;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.Set;
 
 @Builder
 public record RegisterAccountCommand(@Valid @NotNull Member member,
@@ -15,16 +14,9 @@ public record RegisterAccountCommand(@Valid @NotNull Member member,
                                      @Valid @NotNull Profile profile) {
     public static class RegisterAccountCommandBuilder {
         public RegisterAccountCommand build() {
-
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validator = factory.getValidator();
-
             RegisterAccountCommand command = new RegisterAccountCommand(member, credentials, profile);
 
-            Set<ConstraintViolation<RegisterAccountCommand>> violations = validator.validate(command);
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            }
+            Validator.validateBean(command);
 
             return command;
         }

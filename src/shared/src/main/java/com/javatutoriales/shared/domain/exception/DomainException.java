@@ -10,14 +10,4 @@ public abstract class DomainException extends RuntimeException {
         super(message);
         this.errorCode = errorCode;
     }
-
-    protected DomainException(String message, Throwable cause, String errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
-    protected DomainException(Throwable cause, String errorCode) {
-        super(cause);
-        this.errorCode = errorCode;
-    }
 }

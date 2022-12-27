@@ -1,20 +1,52 @@
 
+plugins {
+    id 'org.springframework.boot' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
 ext {
     cucumberVersion = "7.10.1"
 }
 
 
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+
 dependencies {
-    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Data access
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // Observability
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 
-    testImplementation 'org.assertj:assertj-core:3.23.1'
+    // TEST
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testRuntimeOnly    'com.h2database:h2'
 
+    // TEST BDD
     testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
     testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
     testImplementation "io.cucumber:cucumber-picocontainer:${cucumberVersion}"
 
+    // TEST Spring
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 
-    testImplementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
-    testImplementation 'org.glassfish:jakarta.el:5.0.0-M1'
+    // Testcontainers
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.testcontainers:postgresql'
 }

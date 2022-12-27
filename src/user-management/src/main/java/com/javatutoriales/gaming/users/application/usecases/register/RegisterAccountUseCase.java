@@ -1,7 +1,8 @@
 package com.javatutoriales.gaming.users.application.usecases.register;
 
-import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
+import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
+import com.javatutoriales.gaming.users.domain.exceptions.UsernameDuplicatedException;
 
 public interface RegisterAccountUseCase {
-    AccountId registerAccount(RegisterAccountCommand registerAccountCommand);
+     AccountCreatedEvent registerAccount(RegisterAccountCommand registerAccountCommand) throws UsernameDuplicatedException;
 }
