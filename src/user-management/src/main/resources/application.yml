@@ -1,0 +1,11 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: user-management
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}

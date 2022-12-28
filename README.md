@@ -110,3 +110,4 @@ Even though I'll try to use different techniques and styles on each "microservic
 
 ## References
 - https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
+- https://github.com/springdoc/springdoc-openapi-demos/tree/master/springdoc-openapi-spring-boot-2-webmvc
