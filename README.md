@@ -50,7 +50,11 @@ It's important to note that Hexagonal Architecture came before Clean Architectur
 
 There are different ways to represent it and implement it (as it seems that everyone on the Internet is interpreting it in different ways). The preceding figure shows what a hexagonal architecture might look like.
 
+<div style="text-align:center">
+
 ![Hex Architecture Diagram 1](.github/assets/img/hex_architecture_1.png)
+
+</div>
 
 Within the hexagon, we find our **domain entities** and the **use cases** that work with them. Note that the hexagon has no outgoing dependencies, instead all dependencies point toward the center.
 
@@ -62,28 +66,71 @@ To allow communication between the application core and the adapters, the applic
 
 That's why sometimes the Hexagonal architecture is represented using this diagram, that combines the entities and use cases in a central element called **Business Logic**, **Domain**, or **Core**.
 
+<div style="text-align:center">
+
 ![Hex Architecture Diagram 2](.github/assets/img/hex_architecture_2.png)
+
+</div>
 
 The previous diagram is often simplified in this way, which also helps to integrate the concepts of DDD:
 
+<div style="text-align:center">
+
 ![Hex Architecture Diagram 3](.github/assets/img/hex_architecture_3.png)
+
+</div>
 
 One of the main ideas of the hexagonal architecture is to separate business code from technology code. To achieve these goals, we must determine a place where the business code will exist, isolated and protected from any technology concerns. It'll give rise to the creation of our first hexagon: the **Domain hexagon**.
 
 In the **Domain** hexagon, we assemble the elements responsible for describing the core problems we want our software to solve. **Entities** and **Value objects** are the main elements that are utilized in the Domain hexagon. Entities represent things we can assign an identity to, and value objects are immutable components that we can use to compose our entities. The terms refer to both the entities and value objects that come from DDD principles.
 
+<div style="text-align:center">
+
 ![Domain Hexagon](.github/assets/img/domain.png)
+
+</div>
 
 The **Domain** hexagon represents an effort to understand and model a real-world problem.
 
 We also need ways to use, process, and orchestrate the business rules coming from the Domain hexagon. That's what the **Application** hexagon does. It sits between the business and technology sides, serving as a middleman to interact with both parties. The Application hexagon utilizes **ports** and **use cases** to perform its functions.
 
+<div style="text-align:center">
+
 ![Application Hexagon](.github/assets/img/application.png)
+
+</div>
 
 The **Infrastructure** (sometimes also called **Framework**) hexagon provides the outside world interface. That's the place where we have the opportunity to determine how to expose application features – this is where we define REST or gRPC endpoints, for example. And to consume things from external sources, we use the Infrastructure hexagon to specify the mechanisms to fetch data from databases, message brokers, or any other system. In the hexagonal architecture, we materialize technology decisions through **adapters**.
 
+<div style="text-align:center">
+
 ![Infrastructure Hexagon](.github/assets/img/infrastructure.png)
 
+</div>
+
+The input adapters from the Framework hexagon don't need to depend on the input port implementations from the Application hexagon. Instead, the input adapters will only depend on the use case interface types, rather than the input ports concrete types. In such a context, we can regard input adapters as high-level components and input port as low-level components. Input adapters refer to use case interfaces.
+
+<div style="text-align:center">
+
+![Providing services with use cases and input ports](.github/assets/img/usecases_inputports.png)
+
+</div>
+
+On the other hand, input ports depend on output ports. In that sense, input ports can be regarded as high-level components because they depend on the abstractions provided by output ports. Output adapters act as low-level components that provide implementations for output port abstractions. The following diagram shows an illustration of this dependency inversion arrangement:
+
+<div style="text-align:center">
+
+![Providing services with output ports and output adapters](.github/assets/img/output_ports_adapters.png)
+
+</div>
+
+Using the first diagrams, we could represent out graphically represent our components in this way: 
+
+<div style="text-align:center">
+
+![Hex Architecture Diagram 4](.github/assets/img/hex_architecture_4.png)
+
+</div>
 
 ## Implementation
 Each module (microservice) will be implemented using the following package structure, which combines the concepts of hexagonal architecture and Domain-Driven Design. I'm trying to not make it complex, but flexible to modify it when necessary:
