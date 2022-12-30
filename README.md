@@ -50,11 +50,11 @@ It's important to note that Hexagonal Architecture came before Clean Architectur
 
 There are different ways to represent it and implement it (as it seems that everyone on the Internet is interpreting it in different ways). The preceding figure shows what a hexagonal architecture might look like.
 
-<div style="text-align:center">
+<p align="center">
 
 ![Hex Architecture Diagram 1](.github/assets/img/hex_architecture_1.png)
 
-</div>
+</p>
 
 Within the hexagon, we find our **domain entities** and the **use cases** that work with them. Note that the hexagon has no outgoing dependencies, instead all dependencies point toward the center.
 
@@ -126,11 +126,11 @@ On the other hand, input ports depend on output ports. In that sense, input port
 
 Using the first diagrams, we could represent out graphically represent our components in this way: 
 
-<div style="text-align:center">
+<p align="center">
 
 ![Hex Architecture Diagram 4](.github/assets/img/hex_architecture_4.png)
 
-</div>
+</p>
 
 ## Implementation
 Each module (microservice) will be implemented using the following package structure, which combines the concepts of hexagonal architecture and Domain-Driven Design. I'm trying to not make it complex, but flexible to modify it when necessary:
