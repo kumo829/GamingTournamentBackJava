@@ -1,6 +1,7 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.input.api;
 
-import com.javatutoriales.gaming.users.domain.entities.Account;
+import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
+import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.dto.RegisterAccountDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +17,7 @@ public interface UserManagementRestAPI {
                     "The service validates that a valid password is provided")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Account created",
-                    content = { @Content(mediaType = "application/json",  schema = @Schema(implementation = Account.class)) }),
+                    content = { @Content(mediaType = "application/json",  schema = @Schema(implementation = RegisterAccountDto.class)) }),
             @ApiResponse(responseCode = "405", description = "Invalid input") })
-    ResponseEntity<Account> registerAccount(@Parameter(description = "account details", required = true) @Valid Account account);
+    ResponseEntity<AccountId> registerAccount(@Parameter(description = "account details", required = true) @Valid RegisterAccountDto account);
 }

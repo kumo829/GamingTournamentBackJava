@@ -8,9 +8,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Builder
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class Account extends AggregateRoot<AccountId> {
     @NotNull
     @Valid
