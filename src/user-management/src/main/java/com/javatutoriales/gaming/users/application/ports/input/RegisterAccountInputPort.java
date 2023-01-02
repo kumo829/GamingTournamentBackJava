@@ -40,8 +40,7 @@ public class RegisterAccountInputPort implements RegisterAccountUseCase {
 
         UsernameUniqueSpecification usernameUniqueSpecification = new UsernameUniqueSpecification(maybeMember);
 
-        if (!usernameUniqueSpecification.isSatisfiedBy(registerAccountCommand.member())) {
-            throw new UsernameDuplicatedException("There is already an account with the username '%s".formatted(registerAccountCommand.member().getEmail()), "UDE-001");
-        }
+        usernameUniqueSpecification.check(registerAccountCommand.member());
+        // TODO: Verify password's complexity and that the current user can create new users with the specified profile
     }
 }

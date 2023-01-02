@@ -4,6 +4,7 @@ import com.javatutoriales.gaming.users.application.ports.input.RegisterAccountIn
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
 import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,10 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class InputApiConfig {
 
-    private final AccountStorageOutputPort accountStorageOutputPort;
+    @Qualifier("dbStorageOutputPort")
+    private final AccountStorageOutputPort dbStorageOutputPort;
 
     @Bean
     RegisterAccountUseCase registerAccountUseCase() {
-        return new RegisterAccountInputPort(accountStorageOutputPort);
+        return new RegisterAccountInputPort(dbStorageOutputPort);
     }
 }

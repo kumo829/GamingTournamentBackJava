@@ -4,7 +4,7 @@ import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handlers.RestExceptionHandler;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.services.RegisterAccountService;
-import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.dto.RegisterAccountDto;
+import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.RegisterAccountRequest;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
@@ -52,16 +52,16 @@ class UserManagementRestControllerTest {
     @DisplayName("Valid account registration request")
     void givenAValidAccountDto_whenRequestToRegisterTheAccount_thenA201StatusCodeAndLocationHeaderWithAccountIdAndBodyWithAccountId(){
 
-        RegisterAccountDto registerAccountDto = new RegisterAccountDto("user", "password", "firstName", "lastName", "email@email.com", Profile.STAFF);
+        RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest("user", "password", "firstName", "lastName", "email@email.com", Profile.STAFF);
         String expectedUUID = UUID.randomUUID().toString();
 
-        BDDMockito.given(registerAccountService.registerAccount(registerAccountDto)).willReturn(AccountId.withId(expectedUUID));
+        BDDMockito.given(registerAccountService.registerAccount(registerAccountRequest)).willReturn(AccountId.withId(expectedUUID));
 
         given()
             .contentType(ContentType.JSON)
-            .body(registerAccountDto)
+            .body(registerAccountRequest)
         .when()
-            .post("/users", registerAccountDto)
+            .post("/v1/users", registerAccountRequest)
         .then()
                 .assertThat()
                     .body("value", is(expectedUUID))
@@ -73,13 +73,13 @@ class UserManagementRestControllerTest {
     @Test
     @DisplayName("Registration request with missing required fields")
     void givenAnAccountDtoWithoutARequiredField_whenSendingARequestToRegisterTheAccount_thenAnErrorWithTheListOfMissingFieldsShouldBeReceived() throws UnsupportedEncodingException {
-        RegisterAccountDto registerAccountDto = new RegisterAccountDto(null, "password", "", "lastName", "email@email.com", Profile.STAFF);
+        RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest(null, "password", "", "lastName", "email@email.com", Profile.STAFF);
 
         MockMvcResponse response = given()
             .contentType(ContentType.JSON)
-            .body(registerAccountDto)
+            .body(registerAccountRequest)
         .when()
-            .post("/users", registerAccountDto)
+            .post("/v1/users", registerAccountRequest)
         .then()
             .assertThat()
                 .status(HttpStatus.BAD_REQUEST).extract().response();

@@ -1,15 +1,21 @@
-package com.javatutoriales.gaming.users.infrastructure.adapters.output.database;
+package com.javatutoriales.gaming.users.infrastructure.adapters.output;
 
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
 import com.javatutoriales.gaming.users.domain.entities.Account;
 import com.javatutoriales.gaming.users.domain.entities.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Component("dbStorageOutputPort")
-public class PostgresStorageOutputPort implements AccountStorageOutputPort {
+@Component("accountStorageOutputPort")
+@RequiredArgsConstructor
+public class CompositeAccountStorageOutputAdapter implements AccountStorageOutputPort {
+
+    private final List<AccountStorageOutputPort> outputPorts;
+
     @Override
     public Stream<Account> getAll() {
         return null;

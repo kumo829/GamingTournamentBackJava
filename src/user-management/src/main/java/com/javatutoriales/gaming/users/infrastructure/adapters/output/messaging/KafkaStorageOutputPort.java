@@ -1,4 +1,4 @@
-package com.javatutoriales.gaming.users.infrastructure.adapters.output.database;
+package com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging;
 
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
 import com.javatutoriales.gaming.users.domain.entities.Account;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Component("dbStorageOutputPort")
-public class PostgresStorageOutputPort implements AccountStorageOutputPort {
+@Component
+public class KafkaStorageOutputPort implements AccountStorageOutputPort {
     @Override
     public Stream<Account> getAll() {
         return null;
