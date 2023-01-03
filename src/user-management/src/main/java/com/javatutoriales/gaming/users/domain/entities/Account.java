@@ -6,12 +6,11 @@ import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.shared.domain.entity.AggregateRoot;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-@Builder
-@Data
+@Getter
+@Setter
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public class Account extends AggregateRoot<AccountId> {
     @NotNull
@@ -23,4 +22,12 @@ public class Account extends AggregateRoot<AccountId> {
     @NotNull
     @Valid
     private Profile profile;
+
+    @Builder
+    public Account(AccountId accountId, Credentials credentials, Member member, Profile profile) {
+        super(accountId);
+        this.credentials = credentials;
+        this.member = member;
+        this.profile = profile;
+    }
 }

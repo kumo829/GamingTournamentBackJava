@@ -8,9 +8,7 @@ import lombok.*;
 
 
 @Data
-@Builder
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Member extends BaseEntity<MemberId> {
     @NotEmpty
     private final String firstName;
@@ -19,4 +17,12 @@ public class Member extends BaseEntity<MemberId> {
     @NotEmpty
     @Email
     private final String email;
+
+    @Builder
+    public Member(MemberId memberId, String firstName, String lastName, String email) {
+        super(memberId);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 }

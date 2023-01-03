@@ -81,7 +81,7 @@ class RegisterAccountCommandBuilderTest {
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
-                .hasMessageContaining("credentials.password")
+                .hasMessageContaining("password")
                 .hasMessageContaining("size must be between 8 and 30");
     }
 
@@ -126,7 +126,7 @@ class RegisterAccountCommandBuilderTest {
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
-                .hasMessageContaining("credentials.username")
+                .hasMessageContaining("username")
                 .hasMessageContaining("must not be empty");
     }
 
@@ -141,7 +141,7 @@ class RegisterAccountCommandBuilderTest {
                     .build();
         })
                 .isInstanceOf(ConstraintViolationException.class)
-                .hasMessageContaining("credentials.password")
+                .hasMessageContaining("password")
                 .hasMessageContaining("must not be empty");
     }
     @Test

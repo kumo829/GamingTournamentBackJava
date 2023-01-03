@@ -1,12 +1,9 @@
 package com.javatutoriales.gaming.users.infrastructure.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
@@ -14,9 +11,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Account {
     @Id
-    private Long id;
+    private UUID id;
 
     private String firstName;
 

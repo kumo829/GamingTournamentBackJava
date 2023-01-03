@@ -8,6 +8,7 @@ import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import com.javatutoriales.gaming.users.domain.exceptions.UsernameDuplicatedException;
 import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpecification;
+import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.shared.validations.Validator;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class RegisterAccountInputPort implements RegisterAccountUseCase {
         validateInputData(registerAccountCommand);
 
         Account newAccount = Account.builder()
+                .accountId(AccountId.withRandomId())
                 .credentials(registerAccountCommand.credentials())
                 .member(registerAccountCommand.member())
                 .profile(registerAccountCommand.profile())

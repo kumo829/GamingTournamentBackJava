@@ -3,6 +3,7 @@ package com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
 import com.javatutoriales.gaming.users.domain.entities.Account;
 import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class KafkaStorageOutputPort implements AccountStorageOutputPort {
     }
 
     @Override
-    public Account saveAccount(Account account) {
+    public Account saveAccount(AccountCreatedEvent accountEvent) {
         return null;
     }
 }

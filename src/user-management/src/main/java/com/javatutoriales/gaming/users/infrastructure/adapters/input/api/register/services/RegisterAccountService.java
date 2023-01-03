@@ -21,7 +21,7 @@ public class RegisterAccountService {
         var registerAccountCommand = mapper.requestToCommand(request);
 
         var resultEvent = registerAccountUseCase.registerAccount(registerAccountCommand);
-        accountStorageOutputPort.saveAccount(resultEvent.getAccount());
+        accountStorageOutputPort.saveAccount(resultEvent);
 
         return resultEvent.getAccount().getId();
     }

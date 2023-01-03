@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:15.1-alpine:///accounts
+    username: sa
+    password: sa
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    locations: filesystem:./src/main/db/migration
+  test:
+    database:
+      replace: none
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+

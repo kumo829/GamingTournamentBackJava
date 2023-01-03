@@ -3,6 +3,7 @@ package com.javatutoriales.gaming.users.infrastructure.adapters.output;
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
 import com.javatutoriales.gaming.users.domain.entities.Account;
 import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,10 @@ public class CompositeAccountStorageOutputAdapter implements AccountStorageOutpu
     }
 
     @Override
-    public Account saveAccount(Account account) {
-        return null;
+    public Account saveAccount(AccountCreatedEvent accountEvent) {
+
+        outputPorts.forEach(outputPort -> outputPort.saveAccount(accountEvent));
+
+        return accountEvent.getAccount();
     }
 }
