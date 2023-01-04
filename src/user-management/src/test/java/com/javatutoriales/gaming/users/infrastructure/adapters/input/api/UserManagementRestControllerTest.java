@@ -96,25 +96,28 @@ class UserManagementRestControllerTest {
         assertThat(jsonPath.getInt("fields.size()")).isEqualTo(2);
 
         var errorsList = jsonPath.getMap("fields");
-        assertThat(errorsList).containsEntry("firstName", "must not be blank");
-        assertThat(errorsList).containsEntry("username", "must not be blank");
-        assertThat(errorsList).doesNotContainKey("password");
-        assertThat(errorsList).doesNotContainKey("lastName");
-        assertThat(errorsList).doesNotContainKey("email");
-        assertThat(errorsList).doesNotContainKey("profile");
+        assertThat(errorsList)
+                .containsEntry("firstName", "must not be blank")
+                .containsEntry("username", "must not be blank")
+                .doesNotContainKey("password")
+                .doesNotContainKey("lastName")
+                .doesNotContainKey("email")
+                .doesNotContainKey("profile");
 
 
         var resolvedException = mvcResult.getResolvedException();
         assertThat(resolvedException).isInstanceOf(MethodArgumentNotValidException.class);
 
         String message = resolvedException.getMessage();
-        assertThat(message).contains("with 2 errors");
-        assertThat(message).contains("firstName");
-        assertThat(message).contains("username");
-        assertThat(message).contains("must not be blank");
-        assertThat(message).doesNotContain("password");
-        assertThat(message).doesNotContain("lastName");
-        assertThat(message).doesNotContain("email");
-        assertThat(message).doesNotContain("profile");
+
+        assertThat(message)
+                .contains("with 2 errors")
+                .contains("firstName")
+                .contains("username")
+                .contains("must not be blank")
+                .doesNotContain("password")
+                .doesNotContain("lastName")
+                .doesNotContain("email")
+                .doesNotContain("profile");
     }
 }

@@ -2,6 +2,7 @@ package com.javatutoriales.gaming.users.infrastructure.adapters.output.database;
 
 import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
+import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.gaming.users.infrastructure.model.Account;
 import com.javatutoriales.gaming.users.infrastructure.model.mappers.AccountMapper;
 import com.javatutoriales.gaming.users.infrastructure.model.mappers.AccountMapperImpl;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,8 +44,12 @@ class PostgresStorageOutputPortTest {
         var email = "email@mail.com";
         var firstName = "firstName";
         var lastName = "lastName";
+        var username = "username";
+        var password = "password";
+        var profile = Profile.STAFF;
+        var createdAt = ZonedDateTime.now();
 
-        em.persist(new Account(id, firstName, lastName, email));
+        em.persist(new Account(id, firstName, lastName, email, username, password, profile));
 
         Optional<Member> maybeMember = postgresOutputPort.findMemberByUsername(email);
 
@@ -60,11 +66,15 @@ class PostgresStorageOutputPortTest {
     void givenAnExistingRecordInAccountsTable_whenInsertingAnotherRecordWithTheSameEmail_thenAnErrorShouldBeRaised() {
 
         var email = "email@mail.com";
+        var username = "username";
+        var password = "password";
+        var profile = Profile.STAFF;
+        var createdAt = ZonedDateTime.now();
 
-        em.persist(new Account(UUID.randomUUID(), "firstName", "lastName", email));
+        em.persist(new Account(UUID.randomUUID(), "firstName", "lastName", email, username, password, profile));
         em.flush();
 
-        Account newAccount = new Account(UUID.randomUUID(), "anotherFirstName", "anotherLastName", email);
+        Account newAccount = new Account(UUID.randomUUID(), "anotherFirstName", "anotherLastName", email, username, password, profile);
         var domainAccount = accountMapper.infraToDomain(newAccount);
 
         AccountCreatedEvent accountEvent = new AccountCreatedEvent(domainAccount);

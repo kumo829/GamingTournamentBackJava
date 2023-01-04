@@ -14,13 +14,17 @@ public interface AccountMapper {
     @Mapping(target = "member.lastName", source = "lastName")
     @Mapping(target = "member.email", source = "email")
     @Mapping(target = "member.memberId", source = "id")
+    @Mapping(target = "credentials.username", source = "username")
+    @Mapping(target = "credentials.password", source = "password")
     @Mapping(target = "accountId", source = "id")
     Account infraToDomain(com.javatutoriales.gaming.users.infrastructure.model.Account infraAccount);
 
     @Mapping(target = "firstName", source = "member.firstName")
     @Mapping(target = "lastName", source = "member.lastName")
     @Mapping(target = "email", source = "member.email")
-    @Mapping(target = "id", source = "member.id")
+    @Mapping(target = "username", source = "credentials.username")
+    @Mapping(target = "password", source = "credentials.password")
+    @Mapping(target = "id", source = "id")
     com.javatutoriales.gaming.users.infrastructure.model.Account domainToInfra(Account domainAccount);
 
     default String accountIdToUUID(AccountId accountId) {

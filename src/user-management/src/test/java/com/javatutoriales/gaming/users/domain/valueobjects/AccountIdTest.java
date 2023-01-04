@@ -11,10 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AccountIdTest {
 
     @Nested
-    @DisplayName("withId")
-    class WithId {
+    @DisplayName("withId(String)")
+    class WithIdString {
         @Test
-        @DisplayName("Value is equal to provided UUID")
+        @DisplayName("Value is equal to provided String")
         void givenAnAccountIdWithAProvidedId_whenReadingTheValueOfTheAccountId_thenTheIdShouldBeEqualToTheProvidedOne() {
 
             var providedID = UUID.randomUUID().toString();
@@ -23,17 +23,43 @@ class AccountIdTest {
 
             assertThat(accountId).isNotNull();
             assertThat(accountId.getValue()).isNotNull();
-            assertThat(accountId.getValue().toString()).isEqualTo(providedID);
+            assertThat(accountId.getValue()).hasToString(providedID);
         }
 
         @Test
-        @DisplayName("toString contains the provided UUID")
+        @DisplayName("toString contains the provided String")
         void givenAnAccountIdWithAProvidedId_whenInvokeToString_thenTheIdShouldContainProvidedId() {
             var providedID = UUID.randomUUID().toString();
 
             AccountId accountId = AccountId.withId(providedID);
 
-            assertThat(accountId.toString()).isEqualTo("AccountId=%s".formatted(providedID));
+            assertThat(accountId).hasToString("AccountId=%s".formatted(providedID));
+        }
+    }
+    @Nested
+    @DisplayName("withId(UUID)")
+    class WithIdUUID {
+        @Test
+        @DisplayName("Value is equal to provided UUID")
+        void givenAnAccountIdWithAProvidedId_whenReadingTheValueOfTheAccountId_thenTheIdShouldBeEqualToTheProvidedOne() {
+
+            var providedID = UUID.randomUUID();
+
+            AccountId accountId = AccountId.withId(providedID);
+
+            assertThat(accountId).isNotNull();
+            assertThat(accountId.getValue()).isNotNull();
+            assertThat(accountId.getValue()).isEqualTo(providedID);
+        }
+
+        @Test
+        @DisplayName("toString contains the provided UUID")
+        void givenAnAccountIdWithAProvidedId_whenInvokeToString_thenTheIdShouldContainProvidedId() {
+            var providedID = UUID.randomUUID();
+
+            AccountId accountId = AccountId.withId(providedID);
+
+            assertThat(accountId).hasToString("AccountId=%s".formatted(providedID));
         }
     }
 

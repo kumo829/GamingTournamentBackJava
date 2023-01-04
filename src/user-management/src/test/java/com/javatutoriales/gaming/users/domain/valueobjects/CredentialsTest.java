@@ -72,7 +72,7 @@ class CredentialsTest {
 
         Credentials credentials = buildCredentials(expectedUsername, expectedPassword);
 
-        assertThat(credentials.toString()).isEqualTo("Credentials(username=%s, password=%s)".formatted(expectedUsername, expectedPassword));
+        assertThat(credentials).hasToString("Credentials(username=%s, password=%s)".formatted(expectedUsername, expectedPassword));
     }
 
     private Credentials buildCredentials(final String username, final String password) {

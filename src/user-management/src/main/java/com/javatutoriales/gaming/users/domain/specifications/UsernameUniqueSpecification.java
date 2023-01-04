@@ -2,14 +2,14 @@ package com.javatutoriales.gaming.users.domain.specifications;
 
 import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.shared.domain.exception.SpecificationException;
-import com.javatutoriales.shared.domain.specification.AbstractSpecification;
+import com.javatutoriales.shared.domain.specification.Specification;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UsernameUniqueSpecification extends AbstractSpecification<Member> {
+public class UsernameUniqueSpecification implements Specification<Member> {
 
     @NonNull
     private final Optional<Member> existingMember;

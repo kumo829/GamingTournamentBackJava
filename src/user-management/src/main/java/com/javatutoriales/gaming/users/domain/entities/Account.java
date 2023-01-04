@@ -4,6 +4,7 @@ import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.shared.domain.entity.AggregateRoot;
+import com.javatutoriales.shared.validations.Validator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -29,5 +30,7 @@ public class Account extends AggregateRoot<AccountId> {
         this.credentials = credentials;
         this.member = member;
         this.profile = profile;
+
+        Validator.validateBean(this);
     }
 }

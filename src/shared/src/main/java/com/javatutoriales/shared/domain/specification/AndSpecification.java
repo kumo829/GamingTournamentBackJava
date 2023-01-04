@@ -2,7 +2,7 @@ package com.javatutoriales.shared.domain.specification;
 
 import com.javatutoriales.shared.domain.exception.SpecificationException;
 
-public class AndSpecification<T> extends AbstractSpecification<T> {
+public class AndSpecification<T> implements Specification<T> {
     private Specification<T> spec1;
     private Specification<T> spec2;
 
@@ -19,6 +19,6 @@ public class AndSpecification<T> extends AbstractSpecification<T> {
 
     @Override
     public void check(T t) throws SpecificationException {
-
+        // Not necessary to validate here
     }
 }
