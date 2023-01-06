@@ -44,5 +44,6 @@ public class RegisterAccountInputPort implements RegisterAccountUseCase {
 
         usernameUniqueSpecification.check(registerAccountCommand.member());
         // TODO: Verify password's complexity and that the current user can create new users with the specified profile
+        // TODO: Cypher password
     }
 }

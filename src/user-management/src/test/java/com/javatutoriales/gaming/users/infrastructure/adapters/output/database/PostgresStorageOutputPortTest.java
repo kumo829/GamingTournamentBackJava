@@ -3,6 +3,7 @@ package com.javatutoriales.gaming.users.infrastructure.adapters.output.database;
 import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
+import com.javatutoriales.gaming.users.infrastructure.adapters.config.JpaAuditingConfiguration;
 import com.javatutoriales.gaming.users.infrastructure.model.Account;
 import com.javatutoriales.gaming.users.infrastructure.model.mappers.AccountMapper;
 import com.javatutoriales.gaming.users.infrastructure.model.mappers.AccountMapperImpl;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 
@@ -25,7 +27,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles("testcontainers")
 @DataJpaTest
-@ComponentScan({"com.javatutoriales.gaming.users.infrastructure.adapters.output.database", "com.javatutoriales.gaming.users.infrastructure.model", "com.javatutoriales.shared.domain.entity"})
+@Import(JpaAuditingConfiguration.class)
+@ComponentScan({"com.javatutoriales.gaming.users.infrastructure.adapters.output.database",
+        "com.javatutoriales.gaming.users.infrastructure.model",
+        "com.javatutoriales.shared.domain.entity"})
 class PostgresStorageOutputPortTest {
 
     private AccountMapper accountMapper = new AccountMapperImpl();
@@ -39,7 +44,6 @@ class PostgresStorageOutputPortTest {
     @Test
     @DisplayName("Account can be fetched")
     void givenAnEmptyAccountsTable_whenInsertingANewAccount_thenTheAccountsMemberShouldBeFetchableFromTheTableAndContainTheTableValues() {
-
         var id = UUID.randomUUID();
         var email = "email@mail.com";
         var firstName = "firstName";
@@ -47,7 +51,6 @@ class PostgresStorageOutputPortTest {
         var username = "username";
         var password = "password";
         var profile = Profile.STAFF;
-        var createdAt = ZonedDateTime.now();
 
         em.persist(new Account(id, firstName, lastName, email, username, password, profile));
 
@@ -64,12 +67,10 @@ class PostgresStorageOutputPortTest {
     @Test
     @DisplayName("Email is unique")
     void givenAnExistingRecordInAccountsTable_whenInsertingAnotherRecordWithTheSameEmail_thenAnErrorShouldBeRaised() {
-
         var email = "email@mail.com";
         var username = "username";
         var password = "password";
         var profile = Profile.STAFF;
-        var createdAt = ZonedDateTime.now();
 
         em.persist(new Account(UUID.randomUUID(), "firstName", "lastName", email, username, password, profile));
         em.flush();
@@ -79,8 +80,8 @@ class PostgresStorageOutputPortTest {
 
         AccountCreatedEvent accountEvent = new AccountCreatedEvent(domainAccount);
 
+        postgresOutputPort.saveAccount(accountEvent);
         assertThatThrownBy(() -> {
-            postgresOutputPort.saveAccount(accountEvent);
             em.flush();
         }).isInstanceOf(PersistenceException.class)
                 .hasStackTraceContaining("accounts_email_key");

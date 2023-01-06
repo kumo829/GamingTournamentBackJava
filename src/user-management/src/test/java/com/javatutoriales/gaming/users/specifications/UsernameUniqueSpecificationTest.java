@@ -113,10 +113,11 @@ class UsernameUniqueSpecificationTest {
 
             Optional<Member> maybeMember = Optional.of(Member.builder().email(duplicatedUsername).build());
 
+            Member duplicatedMember = Member.builder().email(duplicatedUsername).build();
+
             specification = new UsernameUniqueSpecification(maybeMember);
-            assertThatThrownBy(() -> {
-                specification.check(Member.builder().email(duplicatedUsername).build());
-            }).isInstanceOf(SpecificationException.class)
+            assertThatThrownBy(() -> specification.check(duplicatedMember))
+                    .isInstanceOf(SpecificationException.class)
                     .hasMessageContaining(duplicatedUsername)
                     .hasMessageContaining("already exists");
 

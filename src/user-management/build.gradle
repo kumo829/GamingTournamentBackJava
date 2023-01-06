@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.1'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'org.flywaydb.flyway' version '9.10.2'
+    id 'checkstyle'
 }
 
 description = 'Provides functionality for managing user accounts.'
@@ -25,6 +26,11 @@ dependencyManagement {
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
     }
 }
+
+//checkstyle {
+////    configDirectory.set(file("$rootProject.projectDir/checkstyle"))
+//    toolVersion = '8.29'
+//}
 
 dependencies {
     // Spring
@@ -55,6 +61,7 @@ dependencies {
     // TEST
     testImplementation 'org.testcontainers:junit-jupiter'
     testRuntimeOnly    'com.h2database:h2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
 
     // TEST REST-assured
     testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"

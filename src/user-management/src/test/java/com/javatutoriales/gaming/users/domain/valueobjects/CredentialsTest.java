@@ -4,9 +4,15 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class CredentialsTest {
     @Nested
@@ -27,26 +33,22 @@ class CredentialsTest {
             assertThat(credentials).isNotNull().isOfAnyClassIn(Credentials.class);
         }
 
-        @Test
+        @ParameterizedTest(name = "[{index}]: {0} - {1}")
+        @MethodSource("credentialBuilderErrors")
         @DisplayName("fails if not all mandatory attributes are provided")
-        void givenAnCredentialsBuilderWithNotAllRequiredAttributesProvided_whenInvokingTheBuildMethod_thenAnExceptionIsThrown() {
+        void givenAnCredentialsBuilderWithNotAllRequiredAttributesProvided_whenInvokingTheBuildMethod_thenAnExceptionIsThrown(Credentials.CredentialsBuilder credentialsBuilder, String errorField, String errorMessage) {
+            var ex = assertThrows(ConstraintViolationException.class, credentialsBuilder::build);
+            assertThat(ex.getMessage()).contains(errorField).contains(errorMessage);
+        }
 
-            var ex = assertThrows(ConstraintViolationException.class, () -> Credentials.builder().username("username").build());
-            assertThat(ex.getMessage()).contains("password").contains("must not be empty");
-
-            ex = assertThrows(ConstraintViolationException.class, () -> Credentials.builder().username("").build());
-            assertThat(ex.getMessage()).contains("password").contains("must not be empty");
-
-
-            ex = assertThrows(ConstraintViolationException.class, () -> Credentials.builder().password("").build());
-            assertThat(ex.getMessage()).contains("username").contains("must not be empty");
-
-            ex = assertThrows(ConstraintViolationException.class, () -> Credentials.builder().password("password").build());
-            assertThat(ex.getMessage()).contains("username").contains("must not be empty");
-
-
-            ex = assertThrows(ConstraintViolationException.class, () -> Credentials.builder().username("username").password("abc").build());
-            assertThat(ex.getMessage()).contains("password").contains("size must be between 8 and 30");
+        static Stream<Arguments> credentialBuilderErrors() {
+            return Stream.of(
+                    arguments(Credentials.builder().username("username"), "password", "must not be empty"),
+                    arguments(Credentials.builder().username(""), "password", "must not be empty"),
+                    arguments(Credentials.builder().password(""), "username", "must not be empty"),
+                    arguments(Credentials.builder().password("password"), "username", "must not be empty"),
+                    arguments(Credentials.builder().username("username").password("abc"), "password", "size must be between 8 and 30")
+            );
         }
 
 

@@ -25,7 +25,7 @@ public class Account extends AggregateRoot<AccountId> {
     private Profile profile;
 
     @Builder
-    public Account(AccountId accountId, Credentials credentials, Member member, Profile profile) {
+    private Account(AccountId accountId, Credentials credentials, Member member, Profile profile) {
         super(accountId);
         this.credentials = credentials;
         this.member = member;
