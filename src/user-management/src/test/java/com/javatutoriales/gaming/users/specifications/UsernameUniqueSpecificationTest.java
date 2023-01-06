@@ -120,7 +120,6 @@ class UsernameUniqueSpecificationTest {
                     .isInstanceOf(SpecificationException.class)
                     .hasMessageContaining(duplicatedUsername)
                     .hasMessageContaining("already exists");
-
         }
     }
 }
