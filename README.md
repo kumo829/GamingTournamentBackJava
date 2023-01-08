@@ -4,10 +4,12 @@ This project implements the backend for my other project, [Gaming Tournament Fro
 
 For this project I'll use a Clean Architecture, implementing the Hexagonal Architecture and DDD. 
 
+I'll also implement the *Event Sourcing* and *CQRS -Command Query Responsibility Segregation-* desing patterns.  
+
 To provide a general context of this architecture:
 
 
-## Clean Architecture
+# Clean Architecture
 
 Clean Architecture, that is usually explained using this diagram which shows how such an architecture might look on an abstract level:
 
@@ -40,6 +42,11 @@ It's the idea of separating the application into layers, and conforming to The D
 - Independent of UI
 - Independent of Database
 - Independent of any external agency
+
+
+
+<details>
+	<summary>More information of Hexagonal Architecture</summary>
 
 
 ## Hexagonal Architecture (Ports and Adapters Architecture)
@@ -138,6 +145,27 @@ Each module (microservice) will be implemented using the following package struc
 ![Hexagonal architecture package_structure](.github/assets/img/hexagonal_architecture_package_structure.png)
 
 The main packages -`domain`, `application`, and `infrastructure`(framework)- resemble the hexagonal architecture's layers. The subpackages, I think that the names are self-explanatory. 
+</details>
+
+# CQRS
+
+CQRS is a software design pattern that suggest that the applications should be divided in a *Command* and *Query* parts.
+
+**Commands** alter the state of a resource or entity, and **Queries** returns the state of a resource or entity. With this separation we can scale up the commands and queries sides independently, optimizing each for high performance.
+
+We could think that Command will be receiving by one API, and Queries by another API.
+
+![CQRS](.github/assets/img/CQRS.png)
+
+
+# Event Sourcing 
+
+Defines an approach where all the changes that are made to a resource or entity, are stored as a sequence of immutable events to an event store, as opposite to storing just the current state. We can selectively query these events and reconstruct the state of the application at any point in time.
+
+This opens up the possibility to replay events selectively, replay some events in reverse, and much more. As a consequence, we can treat the application state itself as a secondary citizen, with **the event log as our primary source of truth**.
+
+It is commonly used with the CQRS pattern to perform the data management tasks in response to events and by materializing views from the stored events.
+
 
 # Tech Stack
 Even though I'll try to use different techniques and styles on each "microservice", all of them will share some basic libraries.
