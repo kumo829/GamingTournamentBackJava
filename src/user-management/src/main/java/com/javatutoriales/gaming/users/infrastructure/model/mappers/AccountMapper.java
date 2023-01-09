@@ -2,7 +2,6 @@ package com.javatutoriales.gaming.users.infrastructure.model.mappers;
 
 import com.javatutoriales.gaming.users.domain.entities.Account;
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
-import com.javatutoriales.gaming.users.domain.valueobjects.MemberId;
 import org.mapstruct.*;
 
 import java.util.UUID;
@@ -13,7 +12,6 @@ public interface AccountMapper {
     @Mapping(target = "member.firstName", source = "firstName")
     @Mapping(target = "member.lastName", source = "lastName")
     @Mapping(target = "member.email", source = "email")
-    @Mapping(target = "member.memberId", source = "id")
     @Mapping(target = "credentials.username", source = "username")
     @Mapping(target = "credentials.password", source = "password")
     @Mapping(target = "accountId", source = "id")
@@ -40,13 +38,5 @@ public interface AccountMapper {
 
     default UUID  uuidToAccountId(AccountId accountId) {
         return accountId.getValue();
-    }
-
-    default UUID memberIdToUUID(MemberId memberId) {
-        return memberId.getValue();
-    }
-
-    default MemberId uuidToMemberId(UUID uuid) {
-        return MemberId.withId(uuid);
     }
 }

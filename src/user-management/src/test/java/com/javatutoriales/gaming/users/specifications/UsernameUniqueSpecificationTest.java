@@ -1,7 +1,11 @@
 package com.javatutoriales.gaming.users.specifications;
 
-import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.entities.Account;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpecification;
+import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
+import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
+import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.shared.domain.exception.SpecificationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,9 +34,9 @@ class UsernameUniqueSpecificationTest {
         @Test
         @DisplayName("Null parameter passed to isSatisfiedBy")
         void givenAnValidSpecification_whenIsSatisfiedByIsInvokedWithANullParameter_thenAnExceptionShouldBeThrown() {
-            Optional<Member> maybeMember = Optional.empty();
+            Optional<Account> maybeAccount = Optional.empty();
 
-            specification = new UsernameUniqueSpecification(maybeMember);
+            specification = new UsernameUniqueSpecification(maybeAccount);
             assertThatThrownBy(() -> {
                 specification.isSatisfiedBy(null);
             }).isInstanceOf(NullPointerException.class);
@@ -41,31 +45,31 @@ class UsernameUniqueSpecificationTest {
         @Test
         @DisplayName("No other user with same email")
         void givenASpecificationWithEmptyMemberList_whenTheValidationIsApplied_thenTheResultShouldBeTrue() {
-            Optional<Member> maybeMember = Optional.empty();
+            Optional<Account> maybeAccount = Optional.empty();
 
-            specification = new UsernameUniqueSpecification(maybeMember);
-            boolean memberExists = specification.isSatisfiedBy(Member.builder().email("member@email.com").build());
-            assertThat(memberExists).isFalse();
+            specification = new UsernameUniqueSpecification(maybeAccount);
+            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            assertThat(accountExists).isFalse();
         }
 
         @Test
         @DisplayName("Wrong member passed as parameter")
         void givenASpecificationWithNonDuplicatedMemberList_whenTheValidationIsApplied_thenTheResultShouldBeFalse() {
-            Optional<Member> maybeMember = Optional.of(Member.builder().email("other.member@email.com").build());
+            Optional<Account> maybeAccount = Optional.of(getAccount("other.member@email.com"));
 
-            specification = new UsernameUniqueSpecification(maybeMember);
-            boolean memberExists = specification.isSatisfiedBy(Member.builder().email("member@email.com").build());
-            assertThat(memberExists).isFalse();
+            specification = new UsernameUniqueSpecification(maybeAccount);
+            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            assertThat(accountExists).isFalse();
         }
 
         @Test
         @DisplayName("Existing member with same email")
         void givenASpecificationWithADuplicatedInTheMemberList_whenTheValidationIsApplied_thenTheResultShouldBeFalse() {
-            Optional<Member> maybeMember = Optional.of(Member.builder().email("member@email.com").build());
+            Optional<Account> maybeAccount = Optional.of(getAccount("member@email.com"));
 
-            specification = new UsernameUniqueSpecification(maybeMember);
-            boolean memberExists = specification.isSatisfiedBy(Member.builder().email("member@email.com").build());
-            assertThat(memberExists).isTrue();
+            specification = new UsernameUniqueSpecification(maybeAccount);
+            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            assertThat(accountExists).isTrue();
         }
     }
 
@@ -75,9 +79,9 @@ class UsernameUniqueSpecificationTest {
         @Test
         @DisplayName("Null parameter passed to check")
         void givenAnValidSpecification_whenCheckIsInvokedWithANullParameter_thenAnExceptionShouldBeThrown() {
-            Optional<Member> maybeMember = Optional.empty();
+            Optional<Account> maybeAccount = Optional.empty();
 
-            specification = new UsernameUniqueSpecification(maybeMember);
+            specification = new UsernameUniqueSpecification(maybeAccount);
             assertThatThrownBy(() -> {
                 specification.check(null);
             }).isInstanceOf(NullPointerException.class);
@@ -86,40 +90,49 @@ class UsernameUniqueSpecificationTest {
         @Test
         @DisplayName("No other user with same email")
         void givenASpecificationWithEmptyMemberList_whenTheCheckIsApplied_thenNoExceptionIsThrown() {
-            Optional<Member> maybeMember = Optional.empty();
+            Optional<Account> maybeAccount = Optional.empty();
 
-            specification = new UsernameUniqueSpecification(maybeMember);
+            specification = new UsernameUniqueSpecification(maybeAccount);
             assertThatCode(() -> {
-                specification.check(Member.builder().email("member@email.com").build());
+                specification.check(getAccount("member@email.com"));
             }).doesNotThrowAnyException();
         }
 
         @Test
-        @DisplayName("Wrong member passed as parameter")
+        @DisplayName("Wrong account passed as parameter")
         void givenASpecificationWithNonDuplicatedMemberList_whenTheCheckIsApplied_thenNoExceptionIsThrown() {
-            Optional<Member> maybeMember = Optional.of(Member.builder().email("other.member@email.com").build());
+            Optional<Account> maybeAccount = Optional.of(getAccount("other.member@email.com"));
 
-            specification = new UsernameUniqueSpecification(maybeMember);
+            specification = new UsernameUniqueSpecification(maybeAccount);
             assertThatCode(() -> {
-                specification.check(Member.builder().email("member@email.com").build());
+                specification.check(getAccount("member@email.com"));
             }).doesNotThrowAnyException();
         }
 
         @Test
-        @DisplayName("Existing member with same email")
+        @DisplayName("Existing account with same email")
         void givenASpecificationWithADuplicatedInTheMemberList_whenTheCheckIsApplied_thenExceptionShouldBeThrown() {
 
             final String duplicatedUsername = "member@email.com";
 
-            Optional<Member> maybeMember = Optional.of(Member.builder().email(duplicatedUsername).build());
+            Optional<Account> maybeAccount = Optional.of(getAccount(duplicatedUsername));
 
-            Member duplicatedMember = Member.builder().email(duplicatedUsername).build();
+            Account duplicatedAccount = getAccount(duplicatedUsername);
 
-            specification = new UsernameUniqueSpecification(maybeMember);
-            assertThatThrownBy(() -> specification.check(duplicatedMember))
+            specification = new UsernameUniqueSpecification(maybeAccount);
+            assertThatThrownBy(() -> specification.check(duplicatedAccount))
                     .isInstanceOf(SpecificationException.class)
                     .hasMessageContaining(duplicatedUsername)
                     .hasMessageContaining("already exists");
         }
+    }
+
+    private Account getAccount(String email) {
+        return Account.builder()
+                .accountId(AccountId.withRandomId())
+                .member(Member.builder().email(email).firstName("firstName").lastName("lastName").build())
+                .profile(Profile.STAFF)
+                .credentials(Credentials.builder().username("username").password("password").build())
+                .build();
     }
 }

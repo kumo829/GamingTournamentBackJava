@@ -1,28 +1,14 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging;
 
-import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
-import com.javatutoriales.gaming.users.domain.entities.Account;
-import com.javatutoriales.gaming.users.domain.entities.Member;
-import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
+import com.javatutoriales.gaming.users.infrastructure.adapters.output.events.AccountRegisteredEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-import java.util.stream.Stream;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
-public class KafkaStorageOutputPort implements AccountStorageOutputPort {
-    @Override
-    public Stream<Account> getAll() {
-        return null;
-    }
+public class KafkaStorageOutputPort {
 
-    @Override
-    public Optional<Member> findMemberByUsername(String username) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Account saveAccount(AccountCreatedEvent accountEvent) {
-        return null;
+    @TransactionalEventListener
+    public void registerAccount(AccountRegisteredEvent accountRegisteredEvent) {
+        // Not implemented yet
     }
 }

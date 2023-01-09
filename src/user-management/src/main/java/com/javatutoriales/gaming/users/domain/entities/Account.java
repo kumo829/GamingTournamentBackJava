@@ -2,6 +2,7 @@ package com.javatutoriales.gaming.users.domain.entities;
 
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.shared.domain.entity.AggregateRoot;
 import com.javatutoriales.shared.validations.Validator;

@@ -1,5 +1,6 @@
 package com.javatutoriales.gaming.users.domain.valueobjects;
 
+import com.javatutoriales.gaming.users.utils.TestUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ class AccountIdTest {
 
             assertThat(accountId).isNotNull();
             assertThat(accountId.getValue()).isNotNull();
-            assertThat(accountId.getValue().toString()).matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$");
+            assertThat(accountId.getValue().toString()).matches(TestUtils.UUID_PATTERN);
         }
 
         @Test
@@ -81,7 +82,7 @@ class AccountIdTest {
         void givenAnAccountIdWithARandomId_whenInvokeToString_thenItShouldBeAValidUUID() {
             AccountId accountId = AccountId.withRandomId();
 
-            assertThat(accountId.toString()).matches("^AccountId=[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$");
+            assertThat(accountId.toString()).matches("^AccountId=" + TestUtils.UUID_PATTERN);
         }
     }
 }

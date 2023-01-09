@@ -1,9 +1,8 @@
 package com.javatutoriales.gaming.users.register;
 
 import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountCommand;
-import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
-import com.javatutoriales.gaming.users.domain.valueobjects.MemberId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -75,7 +73,7 @@ class RegisterAccountCommandBuilderTest {
 
         assertThatCode(() -> {
             RegisterAccountCommand command = RegisterAccountCommand.builder()
-                    .member(Member.builder().memberId(MemberId.withId(UUID.randomUUID())).firstName("firstName").lastName("lastName").email("user@email.com").build())
+                    .member(Member.builder().firstName("firstName").lastName("lastName").email("user@email.com").build())
                     .credentials(Credentials.builder().username("username").password("password").build())
                     .profile(Profile.PARTICIPANT)
                     .build();

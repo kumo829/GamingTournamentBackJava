@@ -4,11 +4,11 @@ import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOu
 import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountCommand;
 import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountUseCase;
 import com.javatutoriales.gaming.users.domain.entities.Account;
-import com.javatutoriales.gaming.users.domain.entities.Member;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import com.javatutoriales.gaming.users.domain.exceptions.UsernameDuplicatedException;
 import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpecification;
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
+import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.services.mappers.RegisterAccountMapper;
 import com.javatutoriales.shared.validations.Validator;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +19,7 @@ import java.util.Optional;
 public class RegisterAccountInputPort implements RegisterAccountUseCase {
 
     private final AccountStorageOutputPort membersRegistryOutputPort;
+    private final RegisterAccountMapper accountMapper;
 
     @Override
     public AccountCreatedEvent registerAccount(RegisterAccountCommand registerAccountCommand) throws UsernameDuplicatedException {
@@ -38,11 +39,11 @@ public class RegisterAccountInputPort implements RegisterAccountUseCase {
     private void validateInputData(RegisterAccountCommand registerAccountCommand) {
         Validator.validateBean(registerAccountCommand);
 
-        Optional<Member> maybeMember = membersRegistryOutputPort.findMemberByUsername(registerAccountCommand.member().getEmail());
+        Optional<Account> maybeMember = membersRegistryOutputPort.findByUsername(registerAccountCommand.member().getEmail());
 
         UsernameUniqueSpecification usernameUniqueSpecification = new UsernameUniqueSpecification(maybeMember);
 
-        usernameUniqueSpecification.check(registerAccountCommand.member());
+        usernameUniqueSpecification.check(accountMapper.commandToDomain(registerAccountCommand));
         // TODO: Verify password's complexity and that the current user can create new users with the specified profile
         // TODO: Cypher password
     }

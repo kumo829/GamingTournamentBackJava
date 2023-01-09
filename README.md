@@ -153,6 +153,10 @@ CQRS is a software design pattern that suggest that the applications should be d
 
 **Commands** alter the state of a resource or entity, and **Queries** returns the state of a resource or entity. With this separation we can scale up the commands and queries sides independently, optimizing each for high performance.
 
+**Commands** are named with a **verb in the imperative mood**, for example `RegisterUserCommand` or `DepositFundsCommand`.
+
+**Events** are objects that **describe something that has occurred** in the application. Events are named with a **past-participle verb**, for example `UserRegisteredEvent` or `FundsDepositedEvent`.
+
 We could think that Command will be receiving by one API, and Queries by another API.
 
 ![CQRS](.github/assets/img/CQRS.png)
@@ -186,3 +190,5 @@ Even though I'll try to use different techniques and styles on each "microservic
 ## References
 - https://codesoapbox.dev/ports-adapters-aka-hexagonal-architecture-explained/
 - https://github.com/springdoc/springdoc-openapi-demos/tree/master/springdoc-openapi-spring-boot-2-webmvc
+- https://dev.to/peholmst/series/12780
+- https://dev.to/kirekov/spring-data-power-of-domain-events-2okm

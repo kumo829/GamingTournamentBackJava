@@ -7,6 +7,7 @@ CREATE TABLE accounts
     username      VARCHAR(50) NOT NULL,
     password      VARCHAR(50) NOT NULL,
     profile       VARCHAR(50) NOT NULL,
+    version       INTEGER,
     created_date  TIMESTAMPTZ NOT NULL,
     modified_date TIMESTAMP WITH TIME ZONE,
 

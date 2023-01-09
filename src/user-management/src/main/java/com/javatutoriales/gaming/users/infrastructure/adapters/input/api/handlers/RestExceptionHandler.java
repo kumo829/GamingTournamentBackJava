@@ -1,5 +1,6 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handlers;
 
+import com.javatutoriales.shared.domain.exception.SpecificationException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.Instant;
@@ -33,6 +35,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildFieldErrorsProblemDetail(errors);
     }
 
+    @ExceptionHandler(SpecificationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ProblemDetail processSpecificationException(SpecificationException ex) {
+        ProblemDetail fieldsProblemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        fieldsProblemDetail.setTitle("Bad Request");
+        fieldsProblemDetail.setType(URI.create(getErrorTypePath("/errors/bad-request")));
+        fieldsProblemDetail.setProperty("errorCategory", "Parameters");
+        fieldsProblemDetail.setProperty("timestamp", Instant.now());
+
+        return fieldsProblemDetail;
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
@@ -44,11 +58,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private ProblemDetail buildFieldErrorsProblemDetail(Map<String, String> errors) {
         ProblemDetail fieldsProblemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "The provided parameters are invalid");
         fieldsProblemDetail.setTitle("Bad Request");
-        fieldsProblemDetail.setType(URI.create("https://api.bookmarks.com/errors/not-found"));
+        fieldsProblemDetail.setType(URI.create(getErrorTypePath("/errors/input-error")));
         fieldsProblemDetail.setProperty("errorCategory", "Parameters");
         fieldsProblemDetail.setProperty("timestamp", Instant.now());
         fieldsProblemDetail.setProperty("fields", errors);
 
         return fieldsProblemDetail;
+    }
+
+    private String getErrorTypePath(String errorUri) {
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequestUri();
+        return builder.build() + errorUri;
     }
 }

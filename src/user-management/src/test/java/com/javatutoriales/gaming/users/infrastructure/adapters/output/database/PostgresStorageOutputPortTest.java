@@ -1,6 +1,6 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.output.database;
 
-import com.javatutoriales.gaming.users.domain.entities.Member;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.gaming.users.infrastructure.adapters.config.JpaAuditingConfiguration;
@@ -17,9 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-
-import java.time.ZonedDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +40,7 @@ class PostgresStorageOutputPortTest {
 
     @Test
     @DisplayName("Account can be fetched")
-    void givenAnEmptyAccountsTable_whenInsertingANewAccount_thenTheAccountsMemberShouldBeFetchableFromTheTableAndContainTheTableValues() {
+    void givenAnEmptyAccountsTable_whenInsertingANewAccount_thenTheAccountsShouldBeFetchedFromTheTableAndContainTheTableValues() {
         var id = UUID.randomUUID();
         var email = "email@mail.com";
         var firstName = "firstName";
@@ -54,11 +51,12 @@ class PostgresStorageOutputPortTest {
 
         em.persist(new Account(id, firstName, lastName, email, username, password, profile));
 
-        Optional<Member> maybeMember = postgresOutputPort.findMemberByUsername(email);
+        var maybeAccount = postgresOutputPort.findByUsername(email);
 
-        assertThat(maybeMember).isNotEmpty();
+        assertThat(maybeAccount).isNotEmpty();
+        assertThat(maybeAccount.get().getMember()).isNotNull();
 
-        Member dbMember = maybeMember.get();
+        Member dbMember = maybeAccount.get().getMember();
         assertThat(dbMember.getFirstName()).isEqualTo(firstName);
         assertThat(dbMember.getLastName()).isEqualTo(lastName);
         assertThat(dbMember.getEmail()).isEqualTo(email);

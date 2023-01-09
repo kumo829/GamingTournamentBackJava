@@ -2,8 +2,9 @@ package com.javatutoriales.gaming.users.domain.entities;
 
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
-import com.javatutoriales.gaming.users.domain.valueobjects.MemberId;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
+import com.javatutoriales.gaming.users.utils.TestUtils;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
@@ -31,12 +31,12 @@ class AccountTest {
             Account account = Account.builder()
                     .accountId(AccountId.withRandomId())
                     .credentials(Credentials.builder().username("username").password("password").build())
-                    .member(Member.builder().memberId(MemberId.withId(UUID.randomUUID())).email("email@mail.com").firstName("firstName").lastName("lastName").build())
+                    .member(Member.builder().email("email@mail.com").firstName("firstName").lastName("lastName").build())
                     .profile(Profile.PARTICIPANT)
                     .build();
 
             assertThat(account.getId()).isNotNull();
-            assertThat(account.getId().toString()).matches("^AccountId=[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$");
+            assertThat(account.getId().toString()).matches("^AccountId=" + TestUtils.UUID_PATTERN);
 
             assertThat(account.getCredentials()).isNotNull();
             assertThat(account.getMember()).isNotNull();
@@ -57,14 +57,14 @@ class AccountTest {
                     arguments(named("AccountId not provided",
                                     Account.builder()
                                             .credentials(Credentials.builder().username("username").password("password").build())
-                                            .member(Member.builder().memberId(MemberId.withId(UUID.randomUUID())).email("email@mail.com").firstName("firstName").lastName("lastName").build())
+                                            .member(Member.builder().email("email@mail.com").firstName("firstName").lastName("lastName").build())
                                             .profile(Profile.PARTICIPANT)),
                             "id: must not be null"),
 
                     arguments(named("Credentials not provided",
                                     Account.builder()
                                             .accountId(AccountId.withRandomId())
-                                            .member(Member.builder().memberId(MemberId.withId(UUID.randomUUID())).email("email@mail.com").firstName("firstName").lastName("lastName").build())
+                                            .member(Member.builder().email("email@mail.com").firstName("firstName").lastName("lastName").build())
                                             .profile(Profile.PARTICIPANT)),
                             "credentials: must not be null"),
 
@@ -80,7 +80,7 @@ class AccountTest {
                                     Account.builder()
                                             .accountId(AccountId.withRandomId())
                                             .credentials(Credentials.builder().username("username").password("password").build())
-                                            .member(Member.builder().memberId(MemberId.withId(UUID.randomUUID())).email("email@mail.com").firstName("firstName").lastName("lastName").build())),
+                                            .member(Member.builder().email("email@mail.com").firstName("firstName").lastName("lastName").build())),
                             "profile: must not be null")
             );
         }

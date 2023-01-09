@@ -7,6 +7,7 @@ import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.registe
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.services.mappers.RegisterAccountMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -16,6 +17,7 @@ public class RegisterAccountService {
     private final AccountStorageOutputPort accountStorageOutputPort;
     private final RegisterAccountMapper mapper;
 
+    @Transactional
     public AccountId registerAccount(RegisterAccountRequest request) {
 
         var registerAccountCommand = mapper.requestToCommand(request);
