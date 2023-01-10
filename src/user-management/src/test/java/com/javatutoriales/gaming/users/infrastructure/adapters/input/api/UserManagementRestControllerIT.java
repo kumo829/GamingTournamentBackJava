@@ -61,7 +61,7 @@ class UserManagementRestControllerIT {
     @Test
     @DisplayName("POST /v1/users - CREATED")
     void givenAValidCreateAccountRequest_whenTheAccountIsCreated_thenItShouldHaveAnAccountIdAndDatesAndAnAccountRegisteredEventIsSend() throws UnsupportedEncodingException {
-        RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest("user", "password", "firstName", "lastName", "email@email.com", Profile.STAFF);
+        RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest("user", "h5PaT4To@kB!G&XM", "firstName", "lastName", "email@email.com", Profile.STAFF);
 
         final String apiPath = "/v1/users";
         final String expectedLocation = "(%s%s/)%s".formatted(TestUtils.HOST, apiPath, TestUtils.UUID_PATTERN);

@@ -6,6 +6,7 @@ import com.javatutoriales.gaming.users.application.usecases.register.RegisterAcc
 import com.javatutoriales.gaming.users.domain.entities.Account;
 import com.javatutoriales.gaming.users.domain.events.AccountCreatedEvent;
 import com.javatutoriales.gaming.users.domain.exceptions.UsernameDuplicatedException;
+import com.javatutoriales.gaming.users.domain.specifications.PasswordComplexitySpecification;
 import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpecification;
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.services.mappers.RegisterAccountMapper;
@@ -41,10 +42,11 @@ public class RegisterAccountInputPort implements RegisterAccountUseCase {
 
         Optional<Account> maybeMember = membersRegistryOutputPort.findByUsername(registerAccountCommand.member().getEmail());
 
-        UsernameUniqueSpecification usernameUniqueSpecification = new UsernameUniqueSpecification(maybeMember);
+        Account newAccount = accountMapper.commandToDomain(registerAccountCommand);
 
-        usernameUniqueSpecification.check(accountMapper.commandToDomain(registerAccountCommand));
-        // TODO: Verify password's complexity and that the current user can create new users with the specified profile
+        new UsernameUniqueSpecification(maybeMember).check(newAccount.getMember());
+        new PasswordComplexitySpecification().check(newAccount.getCredentials());
+
         // TODO: Cypher password
     }
 }

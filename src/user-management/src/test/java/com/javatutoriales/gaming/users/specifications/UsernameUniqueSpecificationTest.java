@@ -1,10 +1,10 @@
 package com.javatutoriales.gaming.users.specifications;
 
 import com.javatutoriales.gaming.users.domain.entities.Account;
-import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.specifications.UsernameUniqueSpecification;
 import com.javatutoriales.gaming.users.domain.valueobjects.AccountId;
 import com.javatutoriales.gaming.users.domain.valueobjects.Credentials;
+import com.javatutoriales.gaming.users.domain.valueobjects.Member;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.shared.domain.exception.SpecificationException;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +22,8 @@ class UsernameUniqueSpecificationTest {
     @Test
     @DisplayName("Null member passed in constructor")
     void givenASpecificationInstanceWithANullMemberInTheConstructor_whenTheObjectIsConstructed_thenAndExceptionShouldBeThrown() {
-        assertThatThrownBy(() -> {
-            new UsernameUniqueSpecification(null);
-        }).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new UsernameUniqueSpecification(null))
+                .isInstanceOf(NullPointerException.class);
     }
 
 
@@ -33,13 +32,12 @@ class UsernameUniqueSpecificationTest {
     class IsSatisfiedBy {
         @Test
         @DisplayName("Null parameter passed to isSatisfiedBy")
-        void givenAnValidSpecification_whenIsSatisfiedByIsInvokedWithANullParameter_thenAnExceptionShouldBeThrown() {
+        void givenANullMember_whenIsSatisfiedByIsInvoked_thenAnExceptionShouldBeThrown() {
             Optional<Account> maybeAccount = Optional.empty();
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            assertThatThrownBy(() -> {
-                specification.isSatisfiedBy(null);
-            }).isInstanceOf(NullPointerException.class);
+            assertThatThrownBy(() -> specification.isSatisfiedBy(null))
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -48,7 +46,7 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.empty();
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            boolean accountExists = specification.isSatisfiedBy(getMember("member@email.com"));
             assertThat(accountExists).isFalse();
         }
 
@@ -58,7 +56,7 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.of(getAccount("other.member@email.com"));
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            boolean accountExists = specification.isSatisfiedBy(getMember("member@email.com"));
             assertThat(accountExists).isFalse();
         }
 
@@ -68,7 +66,7 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.of(getAccount("member@email.com"));
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            boolean accountExists = specification.isSatisfiedBy(getAccount("member@email.com"));
+            boolean accountExists = specification.isSatisfiedBy(getMember("member@email.com"));
             assertThat(accountExists).isTrue();
         }
     }
@@ -82,9 +80,9 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.empty();
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            assertThatThrownBy(() -> {
-                specification.check(null);
-            }).isInstanceOf(NullPointerException.class);
+            assertThatThrownBy(() ->
+                specification.check(null)
+            ).isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -93,9 +91,9 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.empty();
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            assertThatCode(() -> {
-                specification.check(getAccount("member@email.com"));
-            }).doesNotThrowAnyException();
+            assertThatCode(() ->
+                specification.check(getMember("member@email.com"))
+            ).doesNotThrowAnyException();
         }
 
         @Test
@@ -104,9 +102,9 @@ class UsernameUniqueSpecificationTest {
             Optional<Account> maybeAccount = Optional.of(getAccount("other.member@email.com"));
 
             specification = new UsernameUniqueSpecification(maybeAccount);
-            assertThatCode(() -> {
-                specification.check(getAccount("member@email.com"));
-            }).doesNotThrowAnyException();
+            assertThatCode(() ->
+                specification.check(getMember("member@email.com"))
+            ).doesNotThrowAnyException();
         }
 
         @Test
@@ -117,7 +115,7 @@ class UsernameUniqueSpecificationTest {
 
             Optional<Account> maybeAccount = Optional.of(getAccount(duplicatedUsername));
 
-            Account duplicatedAccount = getAccount(duplicatedUsername);
+            Member duplicatedAccount = getMember(duplicatedUsername);
 
             specification = new UsernameUniqueSpecification(maybeAccount);
             assertThatThrownBy(() -> specification.check(duplicatedAccount))
@@ -127,10 +125,14 @@ class UsernameUniqueSpecificationTest {
         }
     }
 
+    private Member getMember(String email) {
+        return Member.builder().email(email).firstName("firstName").lastName("lastName").build();
+    }
+
     private Account getAccount(String email) {
         return Account.builder()
                 .accountId(AccountId.withRandomId())
-                .member(Member.builder().email(email).firstName("firstName").lastName("lastName").build())
+                .member(getMember(email))
                 .profile(Profile.STAFF)
                 .credentials(Credentials.builder().username("username").password("password").build())
                 .build();
