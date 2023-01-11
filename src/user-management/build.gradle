@@ -84,5 +84,4 @@ dependencies {
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation "org.flywaydb:flyway-core:${flywayVersion}"
-
 }
