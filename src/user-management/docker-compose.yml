@@ -41,17 +41,13 @@ services:
     volumes:
       - kafka_data_volume:/var/lib/kafka/data
 
-  cmak:
-    image: ghcr.io/eshepelyuk/dckr/cmak-3.0.0.5:latest
+  redpanda-console:
+    image: docker.redpanda.com/vectorized/console:latest
     restart: always
-    command:
-      - "-Dcmak.zkhosts=zookeeper:${ZOOKEEPER_PORT}"
-      - "-DbasicAuthentication.enabled=true"
-      - "-DbasicAuthentication.username=username"
-      - "-DbasicAuthentication.password=password"
+    environment:
+      KAFKA_BROKERS: kafka-broker:9092
     ports:
-      - "9000:9000"
-
+      - 9191:8080
 
   init-kafka:
     image: confluentinc/cp-kafka:${KAFKA_VERSION}
@@ -62,18 +58,18 @@ services:
       kafka-topics --bootstrap-server kafka-broker:9092 --list
 
       echo -e 'Deleting kafka topics'
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-register --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-update --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-password-update --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-disable --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-enable --delete --if-exists
+      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-registered --delete --if-exists
+      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-updated --delete --if-exists
+      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-password-updated --delete --if-exists
+      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-disabled --delete --if-exists
+      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-enabled --delete --if-exists
 
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-register --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-update --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-password-update --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-disable --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-enable --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-registered --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-updated --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-password-updated --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-disabled --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-enabled --replication-factor 1 --partitions 1
 
 
       echo -e 'Successfully created the following topics:'
