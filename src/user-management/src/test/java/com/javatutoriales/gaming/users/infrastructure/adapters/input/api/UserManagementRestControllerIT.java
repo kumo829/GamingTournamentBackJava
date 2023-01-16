@@ -1,5 +1,6 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.input.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handlers.RestExceptionHandler;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.RegisterAccountRequest;
@@ -60,7 +61,7 @@ class UserManagementRestControllerIT {
 
     @Test
     @DisplayName("POST /v1/users - CREATED")
-    void givenAValidCreateAccountRequest_whenTheAccountIsCreated_thenItShouldHaveAnAccountIdAndDatesAndAnAccountRegisteredEventIsSend() throws UnsupportedEncodingException {
+    void givenAValidCreateAccountRequest_whenTheAccountIsCreated_thenItShouldHaveAnAccountIdAndDatesAndAnAccountRegisteredEventIsSend() throws UnsupportedEncodingException, JsonProcessingException {
         RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest("user", "h5PaT4To@kB!G&XM", "firstName", "lastName", "email@email.com", Profile.STAFF);
 
         final String apiPath = "/v1/users";

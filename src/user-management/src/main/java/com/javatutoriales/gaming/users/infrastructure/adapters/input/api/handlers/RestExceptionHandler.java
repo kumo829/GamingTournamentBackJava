@@ -1,6 +1,6 @@
 package com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handlers;
 
-import com.javatutoriales.shared.domain.exception.SpecificationException;
+import com.javatutoriales.shared.domain.exception.DomainException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +35,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildFieldErrorsProblemDetail(errors);
     }
 
-    @ExceptionHandler(SpecificationException.class)
+    @ExceptionHandler(DomainException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ProblemDetail processSpecificationException(SpecificationException ex) {
+    ProblemDetail processSpecificationException(DomainException ex) {
         ProblemDetail fieldsProblemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         fieldsProblemDetail.setTitle("Bad Request");
         fieldsProblemDetail.setType(URI.create(getErrorTypePath("/errors/bad-request")));
