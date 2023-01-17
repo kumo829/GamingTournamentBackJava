@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ class KafkaStorageOutputPortIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    static ConsumerFactory<UUID, String> consumerFactory;
     private Consumer<UUID, String> consumer;
 
     @DynamicPropertySource
@@ -54,14 +56,18 @@ class KafkaStorageOutputPortIT {
         registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUpTest() {
         Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(kafkaContainer.getBootstrapServers(), "testGroup", "true");
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.UUIDDeserializer");
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        ConsumerFactory<UUID, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
-        consumer = cf.createConsumer();
+        consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
+    }
+
+    @BeforeEach
+    void setUp() {
+        consumer = consumerFactory.createConsumer();
     }
 
     @Test

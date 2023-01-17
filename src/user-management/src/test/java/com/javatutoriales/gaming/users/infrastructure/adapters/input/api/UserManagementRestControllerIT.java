@@ -6,6 +6,7 @@ import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handler
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.RegisterAccountRequest;
 import com.javatutoriales.gaming.users.infrastructure.adapters.output.events.AccountRegisteredEvent;
 import com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging.KafkaStorageOutputPort;
+import com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging.Topics;
 import com.javatutoriales.gaming.users.infrastructure.model.Account;
 import com.javatutoriales.gaming.users.utils.TestUtils;
 import io.restassured.http.ContentType;
@@ -13,6 +14,11 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.path.json.JsonPath;
 import jakarta.persistence.EntityManager;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,12 +27,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,13 +54,17 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
+import static org.springframework.kafka.test.assertj.KafkaConditions.*;
 
 @SpringBootTest
+@Testcontainers
 @ActiveProfiles("testcontainers")
 class UserManagementRestControllerIT {
+
+    @Container
+    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.1"));
+
     @Autowired
     private UserManagementRestController restController;
 
@@ -51,12 +74,27 @@ class UserManagementRestControllerIT {
     @Autowired
     private EntityManager entityManager;
 
-    @MockBean
-    private KafkaStorageOutputPort kafkaOutputPort;
+    static ConsumerFactory<UUID, String> consumerFactory;
+    private Consumer<UUID, String> consumer;
+
+    @DynamicPropertySource
+    static void kafkaProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
+    }
+
+    @BeforeAll
+    static void setUpTest() {
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(kafkaContainer.getBootstrapServers(), "testGroup", "true");
+        consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.UUIDDeserializer");
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
+    }
 
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.standaloneSetup(restController, restExceptionHandler);
+        consumer = consumerFactory.createConsumer();
     }
 
     @Test
@@ -99,8 +137,16 @@ class UserManagementRestControllerIT {
         assertThat(account.getCreatedDate()).isBeforeOrEqualTo(LocalDateTime.now());
         assertThat(account.getCreatedDate()).isEqualTo(account.getModifiedDate());
 
-        verify(kafkaOutputPort, times(1)).registerAccount(any(AccountRegisteredEvent.class));
-        verifyNoMoreInteractions(kafkaOutputPort);
+        consumer.subscribe(List.of(Topics.ACCOUNT_REGISTERED));
+
+        ConsumerRecords<UUID, String> messagesConsumed = consumer.poll( Duration.of(3, ChronoUnit.SECONDS));
+        assertThat(messagesConsumed).isNotNull();
+        assertThat(messagesConsumed.count()).isEqualTo(1);
+
+        ConsumerRecord<UUID, String> message = messagesConsumed.iterator().next();
+
+        assertThat(message).has(key(UUID.fromString(accountId)))
+                .has(partition(0));
     }
 
 
@@ -153,7 +199,5 @@ class UserManagementRestControllerIT {
                 .doesNotContain("lastName")
                 .doesNotContain("email")
                 .doesNotContain("profile");
-
-        verifyNoInteractions(kafkaOutputPort);
     }
 }
