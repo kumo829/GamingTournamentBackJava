@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.javatutoriales.gaming.users.domain.valueobjects.Profile;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.handlers.RestExceptionHandler;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.RegisterAccountRequest;
-import com.javatutoriales.gaming.users.infrastructure.adapters.output.events.AccountRegisteredEvent;
-import com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging.KafkaStorageOutputPort;
 import com.javatutoriales.gaming.users.infrastructure.adapters.output.messaging.Topics;
 import com.javatutoriales.gaming.users.infrastructure.model.Account;
 import com.javatutoriales.gaming.users.utils.TestUtils;
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -52,10 +49,11 @@ import java.util.regex.Pattern;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.matchesRegex;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-import static org.springframework.kafka.test.assertj.KafkaConditions.*;
+import static org.springframework.kafka.test.assertj.KafkaConditions.key;
+import static org.springframework.kafka.test.assertj.KafkaConditions.partition;
 
 @SpringBootTest
 @Testcontainers
@@ -99,7 +97,7 @@ class UserManagementRestControllerIT {
 
     @Test
     @DisplayName("POST /v1/users - CREATED")
-    void givenAValidCreateAccountRequest_whenTheAccountIsCreated_thenItShouldHaveAnAccountIdAndDatesAndAnAccountRegisteredEventIsSend() throws UnsupportedEncodingException, JsonProcessingException {
+    void givenAValidCreateAccountRequest_whenTheAccountIsCreated_thenItShouldHaveAnAccountIdAndDatesAndAnAccountRegisteredEventIsSend() throws UnsupportedEncodingException {
         RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest("user", "h5PaT4To@kB!G&XM", "firstName", "lastName", "email@email.com", Profile.STAFF);
 
         final String apiPath = "/v1/users";

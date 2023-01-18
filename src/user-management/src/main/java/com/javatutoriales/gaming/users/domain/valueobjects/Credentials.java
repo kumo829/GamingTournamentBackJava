@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Builder(builderClassName = "CredentialsBuilder", buildMethodName = "unsafeBuild")
+import java.util.function.UnaryOperator;
+
 @Getter
 @ToString
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -13,15 +14,16 @@ public class Credentials {
     @NotEmpty
     private final String username;
     @NotEmpty
-    @Size(min = 8, max = 30)
-    private final String password;
+    @Size(min = 8, max = 60)
+    private String password;
 
-    public static class CredentialsBuilder {
-        public Credentials build() {
-            Credentials credentials = unsafeBuild();
-            Validator.validateBean(credentials);
+    @Builder(builderClassName = "CredentialsBuilder")
+    private Credentials(String username, String password, UnaryOperator<String> passwordCustomizer) {
+        this.username = username;
+        this.password = password;
 
-            return credentials;
-        }
+        Validator.validateBean(this);
+
+        this.password = passwordCustomizer == null ? password : passwordCustomizer.apply(password);
     }
 }

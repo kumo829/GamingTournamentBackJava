@@ -57,6 +57,7 @@ dependencies {
     compileOnly  "org.mapstruct:mapstruct:${mapstructVersion}"
 
     implementation 'org.passay:passay:1.6.2'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.72'
 
 
 

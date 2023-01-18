@@ -19,6 +19,7 @@ public interface RegisterAccountMapper {
 
 
     @Mapping(target = "accountId",constant = "00000000-0000-0000-0000-000000000000")
+    @Mapping(target = "credentialCustomizer", ignore = true)
     Account commandToDomain(RegisterAccountCommand command);
 
     default AccountId stringToAccountId(String accountId) {

@@ -47,10 +47,9 @@ class CredentialsTest {
                     arguments(Credentials.builder().username(""), "password", "must not be empty"),
                     arguments(Credentials.builder().password(""), "username", "must not be empty"),
                     arguments(Credentials.builder().password("password"), "username", "must not be empty"),
-                    arguments(Credentials.builder().username("username").password("abc"), "password", "size must be between 8 and 30")
+                    arguments(Credentials.builder().username("username").password("abc"), "password", "size must be between 8 and 60")
             );
         }
-
 
         @Test
         @DisplayName("Builder set the credential's attributes")
@@ -64,11 +63,28 @@ class CredentialsTest {
             assertThat(credentials.getUsername()).isEqualTo(expectedUsername);
             assertThat(credentials.getPassword()).isEqualTo(expectedPassword);
         }
+
+        @Test
+        @DisplayName("Password customizer modifies password")
+        void givenAPasswordCustomizer_whenBuildTheCredentials_thenThePasswordShouldBeCustomized() {
+            final String username = "username";
+            final String originalPassword = "password";
+            final String expectedPassword = "password";
+
+            Credentials credentials = Credentials.builder()
+                    .username(username)
+                    .password(originalPassword)
+                    .passwordCustomizer(p -> expectedPassword)
+                    .build();
+
+            assertThat(credentials.getUsername()).isEqualTo(username);
+            assertThat(credentials.getPassword()).isEqualTo(expectedPassword);
+        }
     }
 
     @Test
     @DisplayName("build toString is valid")
-    void given_when_then() {
+    void givenAValidCredentialsObject_whenInvokingToString_thenTheReturnedStringHasTheValidFormat() {
         final String expectedUsername = "username";
         final String expectedPassword = "password";
 

@@ -2,6 +2,12 @@ server:
   servlet:
     context-path: /api
 
+app:
+  credentials:
+    encoder:
+      strength: 10
+      version: 2y
+
 spring:
   application:
     name: user-management

@@ -2,6 +2,7 @@ package com.javatutoriales.gaming.users.infrastructure.adapters.config;
 
 import com.javatutoriales.gaming.users.application.ports.input.RegisterAccountInputPort;
 import com.javatutoriales.gaming.users.application.ports.output.AccountStorageOutputPort;
+import com.javatutoriales.gaming.users.application.ports.output.PasswordEncoderOutputPort;
 import com.javatutoriales.gaming.users.application.usecases.register.RegisterAccountUseCase;
 import com.javatutoriales.gaming.users.infrastructure.adapters.input.api.register.services.mappers.RegisterAccountMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,10 @@ public class InputApiConfig {
 
     private final RegisterAccountMapper accountMapper;
 
+    private final PasswordEncoderOutputPort passwordEncoder;
+
     @Bean
     RegisterAccountUseCase registerAccountUseCase() {
-        return new RegisterAccountInputPort(dbStorageOutputPort, accountMapper);
+        return new RegisterAccountInputPort(dbStorageOutputPort, passwordEncoder, accountMapper);
     }
 }

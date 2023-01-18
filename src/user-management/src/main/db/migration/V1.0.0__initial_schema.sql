@@ -5,7 +5,7 @@ CREATE TABLE accounts
     last_name     VARCHAR(50) NOT NULL,
     email         VARCHAR(50) NOT NULL,
     username      VARCHAR(50) NOT NULL,
-    password      VARCHAR(50) NOT NULL,
+    password      VARCHAR(60) NOT NULL,
     profile       VARCHAR(50) NOT NULL,
     version       INTEGER,
     created_date  TIMESTAMPTZ NOT NULL,

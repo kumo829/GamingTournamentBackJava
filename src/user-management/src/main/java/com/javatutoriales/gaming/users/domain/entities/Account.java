@@ -10,8 +10,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.function.UnaryOperator;
+
 @Getter
-@Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class Account extends AggregateRoot<AccountId> {
@@ -20,18 +21,22 @@ public class Account extends AggregateRoot<AccountId> {
     private Credentials credentials;
     @NotNull
     @Valid
-    private Member member;
+    private final Member member;
     @NotNull
     @Valid
-    private Profile profile;
+    private final Profile profile;
 
     @Builder
-    private Account(AccountId accountId, Credentials credentials, Member member, Profile profile) {
+    private Account(AccountId accountId, Credentials credentials, Member member, Profile profile, UnaryOperator<Credentials> credentialCustomizer) {
         super(accountId);
         this.credentials = credentials;
         this.member = member;
         this.profile = profile;
 
         Validator.validateBean(this);
+
+        if(credentialCustomizer != null){
+            this.credentials = credentialCustomizer.apply(this.credentials);
+        }
     }
 }
