@@ -1,4 +1,5 @@
-version: '3.6'
+version: '3.9'
+
 services:
   users-db:
     image: postgres:${POSTGRES_VERSION}
@@ -12,76 +13,6 @@ services:
     volumes:
       - postgres_users_volume:/var/lib/postgresql/data
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:${KAFKA_VERSION}
-    environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - 22181:2181
-    volumes:
-    - zookeper_data_volume:/var/lib/zookeeper/data
-    - zookeper_logs_volume:/var/lib/zookeeper/log
-
-
-  kafka-broker:
-    image: confluentinc/cp-kafka:${KAFKA_VERSION}
-    depends_on:
-      - zookeeper
-    ports:
-      - 29092:29092
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
-    volumes:
-      - kafka_data_volume:/var/lib/kafka/data
-
-  redpanda-console:
-    image: docker.redpanda.com/vectorized/console:latest
-    restart: always
-    environment:
-      KAFKA_BROKERS: kafka-broker:9092
-    ports:
-      - 9191:8080
-
-  init-kafka:
-    image: confluentinc/cp-kafka:${KAFKA_VERSION}
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # block until kafka is reachable
-      kafka-topics --bootstrap-server kafka-broker:9092 --list
-
-      echo -e 'Deleting kafka topics'
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-registered --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-updated --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-password-updated --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-disabled --delete --if-exists
-      kafka-topics --bootstrap-server kafka-broker:9092 --topic account-enabled --delete --if-exists
-
-      echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-registered --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-updated --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-password-updated --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-disabled --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic account-enabled --replication-factor 1 --partitions 1
-
-
-      echo -e 'Successfully created the following topics:'
-      kafka-topics --bootstrap-server kafka-broker:9092 --list
-      "
-
 volumes:
   postgres_users_volume:
-    driver: local
-  zookeper_data_volume:
-    driver: local
-  zookeper_logs_volume:
-    driver: local
-  kafka_data_volume:
     driver: local
