@@ -9,3 +9,6 @@ project(':auth-service')?.projectDir = new File('src/auth-service')
 include ':user-management'
 project(':user-management')?.projectDir = new File('src/user-management')
 
+include ':keycloak-user-management'
+project(':keycloak-user-management')?.projectDir = new File('src/keycloak-user-management')
+

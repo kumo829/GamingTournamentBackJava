@@ -1,0 +1,15 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+description = 'Use the Keycloak API to manage user (client) data and access'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.keycloak:keycloak-client-registration-api:20.0.3'
+}
