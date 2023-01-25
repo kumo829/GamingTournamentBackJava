@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /api
+  port: 8081
+
+logging:
+  level:
+    com.javatutoriales.gaming.keycloak: DEBUG
+
+app:
+  keycloak:
+    url:   http://localhost:9191
+    token: /realms/gaming-platform/protocol/openid-connect/token
+    users-service: /admin/realms/gaming-platform/users
+
+spring:
+  application:
+    name: keycloak-user-management
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.UUIDDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: "users-management"
