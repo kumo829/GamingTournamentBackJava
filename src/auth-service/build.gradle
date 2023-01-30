@@ -1,5 +1,5 @@
 dependencies {
-    testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 
     testImplementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     testImplementation 'org.glassfish:jakarta.el:5.0.0-M1'
