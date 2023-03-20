@@ -1,6 +1,6 @@
 
 plugins {
-    id 'org.flywaydb.flyway' version '9.10.2'
+    id 'org.flywaydb.flyway' version '9.16.1'
     id 'checkstyle'
 }
 
